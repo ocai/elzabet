@@ -38,7 +38,7 @@ services:
         npm run knex
         npm start
     volumes:
-      - ./src:/app/server/src
+      - .:/app/server
     ports:
       - 3000:3000
     links:

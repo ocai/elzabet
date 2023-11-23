@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+FOLDERNAME="`basename $(pwd)`"
+
+docker exec elzabet-app $@
