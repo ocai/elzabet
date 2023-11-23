@@ -3,10 +3,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./src/routes/index');
-var usersRouter = require('./src/routes/users');
+// var indexRouter = require('./src/routes/index');
+// var usersRouter = require('./src/routes/users');
 
-const riot = require('./src/services/riot')
+// const riot = require('./src/services/riot')
 
 var app = express();
 
@@ -18,16 +18,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-
-app.get('/test', function(req, res) { 
-    const test = riot.getSummonerInfo('tspin2win');
-    test.then((response) => {
-        // console.log(response.data)
-        res.json(response.data); 
-    })
-  }); 
+const router = require('./src/routes');
+app.use(router);
 
 // Initiate 
 var minutes = 2, the_interval = minutes * 60 * 1000;

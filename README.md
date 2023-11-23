@@ -5,6 +5,10 @@
 - Nodejs
 - npm
 - mysql
+- .env
+
+Put the `.env` file at the project root directory
+(only necessary for endpoints that require it)
 
 ```
 npm install
@@ -12,6 +16,9 @@ npm start
 ```
 
 ## Running with Docker
+Put the `.env` file at the project root directory
+(only necessary for endpoints that require it)
+
 `docker-compose up`
 App waits for DB to be up, so it can take a little bit.
 
