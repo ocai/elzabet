@@ -1,25 +1,6 @@
 version: "3"
 
 services:
-  elzabet:
-    env_file:
-      - ./.env
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        app_port: 3000
-      #   app_db: app-db:30000
-      #   app_env: alpha
-    command: npm start
-    container_name: elzabet
-    restart: always
-    volumes:
-      - ./src:/app/server/src
-    ports:
-      - 3000:3000
-    links:
-      - db
   db:
     container_name: elzabet-mysql
     image: mysql:8
@@ -34,6 +15,37 @@ services:
     expose:
       - '3306'
     volumes:
+      - .docker/setup.sql:/docker-entrypoint-initdb.d/setup.sql
       - my-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  elzabet:
+    container_name: elzabet-app
+    env_file:
+      - ./.env
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        app_port: 3000
+    command:
+      - /bin/sh
+      - -c
+      - |
+        npm run knex
+        npm start
+    volumes:
+      - ./src:/app/server/src
+    ports:
+      - 3000:3000
+    links:
+      - db
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   my-db:
