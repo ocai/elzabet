@@ -8,6 +8,14 @@ const getSummonerInfo = async (name) => {
     return response;
 };
 
+const getActiveGame = async (encryptedId) => {
+	const response = await axios.get(
+		`https://na1.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/${encryptedId}?api_key=${process.env.RIOT_KEY}`
+	);
+	return response;
+};
+
 module.exports = {
-    getSummonerInfo
+    getSummonerInfo,
+	getActiveGame
 }

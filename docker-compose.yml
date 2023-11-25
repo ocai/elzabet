@@ -25,7 +25,7 @@ services:
   elzabet:
     container_name: elzabet-app
     env_file:
-      - ./.env
+      - ./.env.dev
     build:
       context: .
       dockerfile: Dockerfile
