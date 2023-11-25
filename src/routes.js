@@ -4,6 +4,7 @@ const router = express.Router();
 const riot = require('./services/riot')
 
 const players = require('./controllers/players');
+const { sendMessage } = require('./controllers/discord')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -25,6 +26,12 @@ router.get('/test/:summonerName', function(req, res) {
 router.get('/players/:id', async function(req, res) {
   const player = await players.get(req.params.id)
   res.json(player)
+})
+
+// Test Route for Discord Message - delete later
+router.get('/discord/test', async function(req, res) {
+  const message = await sendMessage("this is a message")
+  res.json(message.data)
 })
 
 // Test route for player creation - delete later
