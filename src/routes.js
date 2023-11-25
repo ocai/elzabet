@@ -22,9 +22,18 @@ router.get('/test/:summonerName', function(req, res) {
 });
 
 // Player Routes
-router.get('/players/:id', function(req, res) {
-  players.get(req.params.id)
-  .then((player) => { res.json(player) });
+router.get('/players/:id', async function(req, res) {
+  const player = await players.get(req.params.id)
+  res.json(player)
+})
+
+// Test route for player creation - delete later
+router.get('/create/test', async function (req, res) {
+  const player = await players.create({
+    summoner_name: "tpsin2win",
+    riot_id: 'p0oKoHC6z6_BF7dywgEuQZmi6UPXBxXKD0HltFCcaMv7oqc'
+  })
+  res.json(player);
 })
 
 module.exports = router;

@@ -8,7 +8,7 @@ module.exports = {
   development: {
     client: 'mysql2',
     connection: {
-      host: 'db',
+      host: 'localhost',
       database: 'elzabet',
       port: 3306,
       user: 'root',
