@@ -15,7 +15,21 @@ const getActiveGame = async (encryptedId) => {
 	return response;
 };
 
+const getActiveGameBySummoner = async (summonerName) => {
+	try {
+		const response = await getSummonerInfo(summonerName)
+			.then((response) => {
+				let encryptedId = response.data.id;
+				return getActiveGame(encryptedId)
+			})
+	return response;
+	} catch(err) {
+		console.log(err.response.data)
+		return err.response;
+	}
+}
+
 module.exports = {
     getSummonerInfo,
-	getActiveGame
+	getActiveGameBySummoner
 }

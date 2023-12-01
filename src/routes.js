@@ -16,9 +16,9 @@ router.get('/hello-world', function(req, res, next) {
 });
 
 router.get('/test/:summonerName', function(req, res) { 
-  const test = riot.getSummonerInfo(req.params.summonerName);
+  const test = riot.getActiveGameBySummoner(req.params.summonerName);
   test.then((response) => {
-      res.json(response.data); 
+    res.json(response.data); 
   })
 });
 

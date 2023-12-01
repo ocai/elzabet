@@ -3,10 +3,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-// var indexRouter = require('./src/routes/index');
-// var usersRouter = require('./src/routes/users');
-
-// const riot = require('./src/services/riot')
+const riot = require('./src/services/riot');
+const discord = require('./src/controllers/discord');
 
 var app = express();
 
@@ -25,7 +23,12 @@ app.use(router);
 var minutes = 2, the_interval = minutes * 60 * 1000;
 setInterval(function() {
     console.log("Triggers every 2 min")
-    // TODO: Do the in-game check for summoners
+    const game = riot.getActiveGameBySummoner("ElzisRad");
+    game.then((response) => {
+        if ((response.status == 200) && (response.data.gameId)) {
+            discord.sendMessage("ElzisRad is in a game: https://www.op.gg/summoners/na/ElzIsRad-NA1/ingame")
+        }
+    })
 }, the_interval);
 
 // Start the server 
