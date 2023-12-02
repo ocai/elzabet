@@ -8,11 +8,14 @@ module.exports = {
   development: {
     client: 'mysql2',
     connection: {
-      host: 'localhost',
+      host: 'db',
       database: 'elzabet',
       port: 3306,
       user: 'root',
       password: 'test'
+    },
+    seeds: {
+      directory: './seeds/dev'
     }
   }
 
