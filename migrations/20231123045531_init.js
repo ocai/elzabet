@@ -9,7 +9,7 @@ exports.up = function(knex) {
       table.increments('id');
       table.string('username').notNullable();
       table.string('discord_id');
-      table.integer('points', 100);
+      table.integer('points');
       table.dateTime('created_at', new Date());
       table.dateTime('updated_at', new Date());
     })
@@ -17,15 +17,30 @@ exports.up = function(knex) {
       table.increments('id');
       table.string('summoner_name').notNullable();
       table.string('riot_id').notNullable();
-      table.integer('wins', 0);
-      table.integer('losses', 0);
+      table.integer('wins');
+      table.integer('losses');
+      table.dateTime('created_at', new Date());
+      table.dateTime('updated_at', new Date());
+    })
+    .createTable('games', function(table) {
+      table.increments('id');
+      table.string('playerId').notNullable();
+      table.string('riotGameId').notNullable();
+      table.string('riotMatchId').notNullable();
+      table.string('status').notNullable();
+      table.string('result');
+      table.dateTime('created_at', new Date());
+      table.dateTime('updated_at', new Date());
+    })
+    .createTable('bets', function(table) {
+      table.increments('id');
+      table.string('userId').notNullable();
+      table.string('gameId').notNullable();
+      table.string('option').notNullable();
+      table.integer('amount').notNullable();
       table.dateTime('created_at', new Date());
       table.dateTime('updated_at', new Date());
     });
-  // await knex.raw(`CREATE TABLE elzabet.users (id VARCHAR(255), username VARCHAR(255), discord_id VARCHAR(255), points INTEGER, created_at DATETIME, udpated_at DATETIME)`);
-  // await knex.raw(`CREATE TABLE elzabet.players (id VARCHAR(255), summoner_name VARCHAR(255), riot_id VARCHAR(255), wins INTEGER, losses INTEGER, created_at DATETIME, udpated_at DATETIME)`);
-  // await knex.raw(`CREATE TABLE elzabet.games (id VARCHAR(255), opgg_link VARCHAR(255), result VARCHAR(10), created_at DATETIME, udpated_at DATETIME)`);
-  // await knex.raw(`CREATE TABLE elzabet.bets (id VARCHAR(255), user_id VARCHAR(255), player_id VARCHAR(255), game_id VARCHAR(255), amount INTEGER, bet_result VARCHAR(10), created_at DATETIME, udpated_at DATETIME)`)
 };
 
 /**
@@ -35,9 +50,7 @@ exports.up = function(knex) {
 exports.down = function(knex) {
   return knex.schema
     .dropTable("users")
-    .dropTable("players");
-  // await knex.raw(`DROP TABLE elzabet.users`);
-  // await knex.raw(`DROP TABLE elzabet.players`);
-  // await knex.raw(`DROP TABLE elzabet.games`);
-  // await knex.raw(`DROP TABLE elzabet.bets`);
+    .dropTable("players")
+    .dropTable("games")
+    .dropTable("bets");
 };
