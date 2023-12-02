@@ -8,19 +8,19 @@ exports.up = function(knex) {
     .createTable('users', function (table) {
       table.increments('id');
       table.string('username').notNullable();
-      table.string('discord_id');
+      table.string('discordId');
       table.integer('points');
-      table.dateTime('created_at', new Date());
-      table.dateTime('updated_at', new Date());
+      table.dateTime('createdAt', new Date());
+      table.dateTime('updatedAt', new Date());
     })
     .createTable('players', function (table) {
       table.increments('id');
-      table.string('summoner_name').notNullable();
-      table.string('riot_id').notNullable();
+      table.string('summonerName').notNullable();
+      table.string('riotId').notNullable();
       table.integer('wins');
       table.integer('losses');
-      table.dateTime('created_at', new Date());
-      table.dateTime('updated_at', new Date());
+      table.dateTime('createdAt', new Date());
+      table.dateTime('updatedAt', new Date());
     })
     .createTable('games', function(table) {
       table.increments('id');
@@ -29,8 +29,8 @@ exports.up = function(knex) {
       table.string('riotMatchId').notNullable();
       table.string('status').notNullable();
       table.string('result');
-      table.dateTime('created_at', new Date());
-      table.dateTime('updated_at', new Date());
+      table.dateTime('createdAt', new Date());
+      table.dateTime('updatedAt', new Date());
     })
     .createTable('bets', function(table) {
       table.increments('id');
@@ -38,8 +38,8 @@ exports.up = function(knex) {
       table.string('gameId').notNullable();
       table.string('option').notNullable();
       table.integer('amount').notNullable();
-      table.dateTime('created_at', new Date());
-      table.dateTime('updated_at', new Date());
+      table.dateTime('createdAt', new Date());
+      table.dateTime('updatedAt', new Date());
     });
 };
 
