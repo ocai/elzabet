@@ -6,8 +6,8 @@ const game = require('./game');
 
 function processGames() {
     // TODO: Pull the list of 'players' from the DB and use it here
-    const game = riot.getActiveGameBySummoner("ElzisRad");
-    game.then((response) => {
+    const activeGame = riot.getActiveGameBySummoner("ElzisRad");
+    activeGame.then((response) => {
         // Player is in a game
         if ((response.status == 200) && (response.data.gameId)) {
             console.log(response.data)
@@ -18,12 +18,12 @@ function processGames() {
         } else {
             let inProgressGame = game.getInProgress("ElzisRad");
             // Game is finished
-            if (inProgressGame) {
-                res = riot.getMatch(inProgressGame.id)
+            // if (inProgressGame) {
+                // let res = riot.getMatch(inProgressGame.id)
                 // TODO: Update game
                 // TODO: Get bets, resolve bets
                 // TODO: Send game end discord message
-            }
+            // }
         }
     })
 }

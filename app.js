@@ -20,10 +20,10 @@ app.use(router);
 
 // Initiate Game Polling
 // TODO: Change this back to 2 min (this is just for testing currently)
-var minutes = .1, the_interval = minutes * 60 * 1000;
+var minutes = 2, the_interval = minutes * 60 * 1000;
 setInterval(function() {
     console.log("Triggers every 2 min")
-    poll.processGames();
+    // poll.processGames();
 }, the_interval);
 
 // Start the server 

@@ -19,6 +19,18 @@ function get(id) {
     }
 }
 
+function getBySummonerName(summonerName) {
+    try {
+        const player = dbConn
+            .select(['*'])
+            .from('players')
+            .where('summonerName', '=', summonerName)
+        return player;
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+}
+
 function create(info) {
     let playerInfo = Object.assign({
         'wins': 0,
@@ -42,5 +54,6 @@ function create(info) {
 
 module.exports = {
     get,
+    getBySummonerName,
     create
 }

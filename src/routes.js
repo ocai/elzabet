@@ -24,7 +24,7 @@ router.get('/test/:summonerName', function(req, res) {
 
 // Player Routes
 router.get('/players/:id', async function(req, res) {
-  const player = await players.get(req.params.id)
+  const player = await players.getBySummonerName(req.params.id)
   res.json(player)
 })
 
