@@ -8,6 +8,10 @@ function get(id) {
     return 0;
 }
 
+function getInProgress(id) {
+    return {};
+}
+
 function update(id, body) {
     return 0;
 }
@@ -19,6 +23,7 @@ function remove(id) {
 module.exports = {
     create,
     get,
+    getInProgress,
     update,
     remove
 };
