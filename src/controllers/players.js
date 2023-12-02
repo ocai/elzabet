@@ -21,10 +21,10 @@ function get(id) {
 
 function create(info) {
     let playerInfo = Object.assign({
-        wins: 0,
-        losses: 0,
-        created_at: new Date(),
-        updated_at: new Date(),
+        'wins': 0,
+        'losses': 0,
+        'createdAt': new Date(),
+        'updatedAt': new Date(),
     }, info)
     try {
         const player = dbConn('players')
