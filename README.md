@@ -46,3 +46,8 @@ This application uses Knex for database migrations and seeding.
 See https://knexjs.org/guide/migrations.html
 
 Any seed/migrations can be run using the `./$` prefix to run in the docker container. (Docker container contains Knex).
+
+Useful Commands:
+
+Run migrations: `./$ knex migrate:latest`
+Run seeds: `./$ knex seed:run`
