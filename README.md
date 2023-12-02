@@ -16,6 +16,7 @@ npm start
 
 ## Running with Docker
 Make sure nothing is using PORTS 3000 and 3306.
+For development, get `.env.dev` file from me and place it in the root of the project
 
 `docker-compose up`
 App waits for DB to be up, so it can take a little bit.
