@@ -23,7 +23,7 @@ app.use(router);
 var minutes = .1, the_interval = minutes * 60 * 1000;
 setInterval(function() {
     console.log("Triggers every 2 min")
-    poll.processGame("Elzisrad");
+    poll.processGames();
 }, the_interval);
 
 // Start the server 

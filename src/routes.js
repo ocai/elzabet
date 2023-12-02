@@ -34,13 +34,4 @@ router.get('/discord/test', async function(req, res) {
   res.json(message.data)
 })
 
-// Test route for player creation - delete later
-router.get('/create/test', async function (req, res) {
-  const player = await players.create({
-    summoner_name: "tpsin2win",
-    riot_id: 'p0oKoHC6z6_BF7dywgEuQZmi6UPXBxXKD0HltFCcaMv7oqc'
-  })
-  res.json(player);
-})
-
 module.exports = router;
