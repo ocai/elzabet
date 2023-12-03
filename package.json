@@ -5,7 +5,7 @@
   "scripts": {
     "start": "nodemon app.js",
     "db-build": "node db.init.js",
-    "knex": "knex migrate:latest"
+    "knex": "knex migrate:rollback; knex migrate:latest; knex seed:run"
   },
   "dependencies": {
     "axios": "^1.6.2",
