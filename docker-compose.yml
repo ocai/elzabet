@@ -39,6 +39,7 @@ services:
         npm start
     volumes:
       - .:/app/server
+      - /app/server/node_modules
     ports:
       - 3000:3000
     links:
