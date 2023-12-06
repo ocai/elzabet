@@ -17,38 +17,19 @@ module.exports = {
     seeds: {
       directory: './seeds/dev'
     }
+  },
+
+  test: {
+    client: 'mysql2',
+    connection: {
+      host: 'db',
+      database: 'test',
+      port: 3306,
+      user: 'root',
+      password: 'test'
+    }
   }
 
-  // staging: {
-  //   client: 'mysql2',
-  //   connection: {
-  //     database: 'elzabet',
-  //     user:     'root',
-  //     password: 'test'
-  //   },
-  //   pool: {
-  //     min: 2,
-  //     max: 10
-  //   },
-  //   migrations: {
-  //     tableName: 'knex_migrations'
-  //   }
-  // },
-
-  // production: {
-  //   client: 'mysql2',
-  //   connection: {
-  //     database: 'elzabet',
-  //     user:     'root',
-  //     password: 'test'
-  //   },
-  //   pool: {
-  //     min: 2,
-  //     max: 10
-  //   },
-  //   migrations: {
-  //     tableName: 'knex_migrations'
-  //   }
-  // }
+  // TODO: PROD CONFIG
 
 };

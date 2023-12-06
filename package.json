@@ -5,7 +5,8 @@
   "scripts": {
     "start": "nodemon --legacy-watch app.js",
     "db-build": "node db.init.js",
-    "knex": "knex migrate:rollback; knex migrate:latest; knex seed:run"
+    "knex": "knex migrate:rollback; knex migrate:latest; knex seed:run",
+    "test": "jest --detectOpenHandles"
   },
   "dependencies": {
     "axios": "^1.6.2",
@@ -13,11 +14,13 @@
     "debug": "~2.6.9",
     "dotenv": "^16.3.1",
     "express": "~4.16.1",
+    "iconv-lite": "^0.6.3",
     "knex": "^3.0.1",
     "morgan": "~1.9.1",
     "mysql2": "^3.6.5"
   },
   "devDependencies": {
+    "jest": "^29.7.0",
     "nodemon": "^3.0.1"
   }
 }

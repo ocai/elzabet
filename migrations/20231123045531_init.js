@@ -38,6 +38,7 @@ exports.up = function(knex) {
       table.string('gameId').notNullable();
       table.string('option').notNullable();
       table.integer('amount').notNullable();
+      table.boolean('resolved').notNullable();
       table.dateTime('createdAt', new Date());
       table.dateTime('updatedAt', new Date());
     });

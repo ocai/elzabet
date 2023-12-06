@@ -1,21 +1,10 @@
 'use strict';
 
-const DB_NAME = process.env.DB_NAME;
-const DB_USER = process.env.DB_USER;
-const DB_PASS = process.env.DB_PASS;
-const DB_HOST = process.env.DB_HOST;
+const options = require('../knexfile')
 
-const dbConn = require('knex')({
-    client: 'mysql2',
-    connection: {
-      host : DB_HOST,
-      port : 3306,
-      user : DB_USER,
-      password : DB_PASS,
-      database : DB_NAME
-    },
-    pool: { min: 0, max: 7 }
-  });
-  
+// console.log("DB CONFIG: ")
+// console.log(process.env.NODE_ENV)
+// console.log(options[process.env.NODE_ENV])
+const dbConn = require('knex')(options[process.env.NODE_ENV] || options['development']);  
 
 module.exports = { dbConn }

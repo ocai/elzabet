@@ -52,3 +52,9 @@ Useful Commands:
 
 Run migrations: `./$ knex migrate:latest`
 Run seeds: `./$ knex seed:run`
+
+## Running Tests
+To run the full test suite, 
+```
+./$ npm test
+```

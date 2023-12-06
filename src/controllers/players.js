@@ -10,7 +10,7 @@ const { dbConn } = require('../../config/db.config');
 function get(id) {
     try {
         const player = dbConn
-            .select(['*'])
+            .first(['*'])
             .from('players')
             .where('id', '=', id)
         return player;
@@ -22,7 +22,7 @@ function get(id) {
 function getBySummonerName(summonerName) {
     try {
         const player = dbConn
-            .select(['*'])
+            .first(['*'])
             .from('players')
             .where('summonerName', '=', summonerName)
         return player;
@@ -42,7 +42,6 @@ function create(info) {
         const player = dbConn('players')
             .insert(playerInfo)
             .into('players')
-            .returning('id')
             .then((player) => {
                 return {id: player[0], ...playerInfo}
             })
