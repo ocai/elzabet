@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "nodemon --legacy-watch app.js",
     "db-build": "node db.init.js",
     "knex": "knex migrate:rollback; knex migrate:latest; knex seed:run"
   },
