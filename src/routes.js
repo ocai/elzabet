@@ -3,7 +3,7 @@ const router = express.Router();
 
 const riot = require('./services/riot')
 
-const players = require('./controllers/players');
+const players = require('./controllers/player');
 const { sendMessage } = require('./controllers/discord')
 
 /* GET home page. */
@@ -28,9 +28,20 @@ router.get('/players/:id', async function(req, res) {
   res.json(player)
 })
 
+router.get('/players/create/test', async function(req, res) {
+  const player = await players.create({'summonerName': 'test', 'riotId': 'test'})
+  res.json(player)
+})
+
 // Test Route for Discord Message - delete later
 router.get('/discord/test', async function(req, res) {
   const message = await sendMessage("this is a message")
+  res.json(message.data)
+})
+
+// Test Route for Discord Message - delete later
+router.get('/discord/new', async function(req, res) {
+  const message = await sendMessage("this is a new message")
   res.json(message.data)
 })
 

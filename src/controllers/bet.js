@@ -1,5 +1,7 @@
 'user strict'
 
+const { dbConn } = require('../../config/db.config');
+
 /*
 Bet creation restrictions:
   Reject bet creation if...
@@ -8,18 +10,18 @@ Bet creation restrictions:
 */
 function create(info) {
     let betInfo = Object.assign({
-        'resolved': false,
+        'result': null,
         'createdAt': new Date(),
         'updatedAt': new Date(),
     }, info)
     try {
-        const player = dbConn('bets')
+        const bet = dbConn('bets')
             .insert(betInfo)
             .into('bets')
-            .then((player) => {
-                return {id: player[0], ...playerInfo}
-            })
-        return player;
+            .then((bet) => {
+                return { 'id': bet[0], ...betInfo }
+            });
+        return bet;
     } catch (error) {
         console.error('Error creating bet:', error);
     }
@@ -39,10 +41,10 @@ function getByPlayer(playerId) {
 }
 
 // List of bets for a particular game
-function getByGame(gameId) {
+function getByGame(gameId, selectQuery = '*') {
     try {
         const bets = dbConn
-            .select(['*'])
+            .select([selectQuery])
             .from('bets')
             .where('gameId', '=', gameId)
         return bets;
@@ -51,16 +53,50 @@ function getByGame(gameId) {
     }
 }
 
-// Return all bets a user has made on one game
-function getUserBets(userId, gameId) {
+// Return all bets a user has made
+function getUserBets(userId) {
     try {
         const bets = dbConn
             .select(['*'])
             .from('bets')
-            .where('userId', '=', userId).andWhere('gameId', '=', gameId)
+            .where('userId', '=', userId)
         return bets;
     } catch (error) {
         console.error('Unable to connect to the database:', error);
+    }
+}
+
+// TODO
+// function calculateUserStats(userId) {
+//     return getUserBets(userId)
+//         .then((bets) => {
+//             let optionStats = {};
+//             let winPercentage;
+//         })
+// }
+
+// Resolve bets pertaining to a game id
+function updateByGame(gameId, result) {
+    try {
+        const res = getByGame(gameId, 'id').then((bets) => {
+            const betIds = bets.map((obj => { return obj['id'] }))
+            const wins = dbConn('bets')
+                .whereIn('id', betIds).andWhere('option', '=', result)
+                .update({
+                    'result': 'win',
+                    'updatedAt': new Date()
+                })
+            const losses = dbConn('bets')
+                .whereIn('id', betIds).and.whereNot('option', '=', result)
+                .update({
+                    'result': 'loss',
+                    'updatedAt': new Date()
+                })
+            return Promise.all([wins, losses]);
+        })
+        return res;
+    } catch (error) {
+        console.error(`Error updating gameId ${gameId} with result ${result}`, error);
     }
 }
 
@@ -74,5 +110,6 @@ module.exports = {
     getUserBets,
     getByGame,
     updateByGame,
+    // calculateUserStats,
     remove
 };

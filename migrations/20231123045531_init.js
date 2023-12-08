@@ -8,7 +8,7 @@ exports.up = function(knex) {
     .createTable('users', function (table) {
       table.increments('id');
       table.string('username').notNullable();
-      table.string('discordId');
+      table.string('discordId').notNullable();
       table.integer('points');
       table.dateTime('createdAt', new Date());
       table.dateTime('updatedAt', new Date());
@@ -36,9 +36,10 @@ exports.up = function(knex) {
       table.increments('id');
       table.string('userId').notNullable();
       table.string('gameId').notNullable();
+      table.string('playerId').notNullable();
       table.string('option').notNullable();
       table.integer('amount').notNullable();
-      table.boolean('resolved').notNullable();
+      table.string('result');
       table.dateTime('createdAt', new Date());
       table.dateTime('updatedAt', new Date());
     });

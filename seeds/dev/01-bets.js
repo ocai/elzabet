@@ -9,9 +9,10 @@ exports.seed = async function(knex) {
     {
       userId: 1,
       gameId: 1,
+      playerId: 1,
       option: 'win',
       amount: 100,
-      resolved: false,
+      result: null,
       createdAt: new Date(),
       updatedAt: new Date()
     }
