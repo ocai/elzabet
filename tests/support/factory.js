@@ -8,6 +8,8 @@ function bet(params) {
         'option': 'win',
         'amount': 100,
         'result': null,
+        'updatedAt': '2023-12-09 17:01:47',
+        'createdAt': '2023-12-09 17:01:47'
     }, params)
 }
 
@@ -17,7 +19,9 @@ function game(params) {
         'riotGameId': 'test',
         'riotMatchId': 'NA1_test',
         'status': 'in_progress',
-        'result': null
+        'result': null,
+        'updatedAt': '2023-12-09 17:01:47',
+        'createdAt': '2023-12-09 17:01:47'
     }, params)
 }
 
@@ -25,7 +29,9 @@ function player(params) {
     return Object.assign({
         'id': 1,
         'summonerName': 'tspin2Win',
-        'riotId': 'test'
+        'riotId': 'test',
+        'updatedAt': '2023-12-09 17:01:47',
+        'createdAt': '2023-12-09 17:01:47'
     }, params)
 }
 
@@ -33,7 +39,9 @@ function user(params) {
     return Object.assign({
         'username': 'test',
         'discordId': 'test',
-        'points': 1000
+        'points': 1000,
+        'updatedAt': '2023-12-09 17:01:47',
+        'createdAt': '2023-12-09 17:01:47'
     }, params)
 }
 

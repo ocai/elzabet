@@ -48,5 +48,19 @@ services:
       db:
         condition: service_healthy
 
+  phpmyadmin:
+    image: lscr.io/linuxserver/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+      - PMA_ARBITRARY=1
+    volumes:
+      - ./pma_config:/config
+    ports: 
+      - 8080:80
+    restart: unless-stopped
+
 volumes:
   my-db:
