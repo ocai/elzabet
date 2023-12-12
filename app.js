@@ -7,7 +7,7 @@ var app = express();
 
 require('dotenv').config()
 
-const poll = require('./src/controllers/poll');
+const main = require('./src/controllers/main');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -23,7 +23,7 @@ app.use(router);
 var minutes = 2, the_interval = minutes * 60 * 1000;
 setInterval(function() {
     console.log("Triggers every 2 min")
-    // poll.processGames();
+    // main.processGames();
 }, the_interval);
 
 // Start the server 
