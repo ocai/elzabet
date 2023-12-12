@@ -1,0 +1,81 @@
+{
+    "gameId": 8888888888,
+    "mapId": 11,
+    "gameMode": "CLASSIC",
+    "gameType": "MATCHED_GAME",
+    "gameQueueConfigId": 420,
+    "participants": [
+        {
+            "puuid": "test_puuid",
+            "teamId": 200,
+            "spell1Id": 11,
+            "spell2Id": 4,
+            "championId": 104,
+            "profileIconId": 4863,
+            "summonerName": "L0Liver",
+            "bot": false,
+            "summonerId": "test",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8021,
+                    9111,
+                    9104,
+                    8014,
+                    8347,
+                    8304,
+                    5005,
+                    5008,
+                    5002
+                ],
+                "perkStyle": 8000,
+                "perkSubStyle": 8300
+            }
+        },
+        {
+            "puuid": "test_puuid",
+            "teamId": 200,
+            "spell1Id": 14,
+            "spell2Id": 4,
+            "championId": 497,
+            "profileIconId": 5840,
+            "summonerName": "ElzIsBad",
+            "bot": false,
+            "summonerId": "test",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8465,
+                    8463,
+                    8473,
+                    8242,
+                    8136,
+                    8106,
+                    5008,
+                    5008,
+                    5002
+                ],
+                "perkStyle": 8400,
+                "perkSubStyle": 8100
+            }
+        }
+    ],
+    "observers": {
+        "encryptionKey": "test"
+    },
+    "platformId": "NA1",
+    "bannedChampions": [
+        {
+            "championId": 55,
+            "teamId": 200,
+            "pickTurn": 9
+        },
+        {
+            "championId": 238,
+            "teamId": 200,
+            "pickTurn": 10
+        }
+    ],
+    "gameStartTime": 1701484325857,
+    "gameLength": 858
+}
