@@ -58,3 +58,9 @@ To run the full test suite,
 ```
 ./$ npm test
 ```
+
+## Deploying Slash Commands
+To deploy any changes to slash commands,
+```
+./$ npm run deploy-commands
+```

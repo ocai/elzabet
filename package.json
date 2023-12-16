@@ -6,7 +6,8 @@
     "start": "nodemon --legacy-watch app.js",
     "db-build": "node db.init.js",
     "knex": "knex migrate:rollback; knex migrate:latest; knex seed:run; knex migrate:rollback --env test; knex migrate:latest --env test;",
-    "test": "jest --detectOpenHandles"
+    "test": "jest --detectOpenHandles",
+    "deploy-commands": "node scripts/deploy.js"
   },
   "dependencies": {
     "axios": "^1.6.2",
