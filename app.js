@@ -26,6 +26,10 @@ setInterval(function() {
     // main.processGames();
 }, the_interval);
 
+// Start Discord Bot
+const discordClient = require('./client');
+discordClient.startClient();
+
 // Start the server 
 const PORT=3000;
 app.listen(PORT,() => { 

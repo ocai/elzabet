@@ -1,7 +1,7 @@
 'use strict'
 
 const riot = require('../services/riot');
-const discord = require('./discord');
+// const discord = require('./discord');
 const game = require('./game');
 const player = require('./player');
 
