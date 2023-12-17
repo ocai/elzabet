@@ -15,7 +15,7 @@ describe('Game: get', () => {
                 'result': 'loss'
             }
         ));
-        const res = await game.get(gameId);
+        const res = await game.get({'id': gameId});
         expect(res).toMatchObject({
             'id': expect.any(Number),
             'playerId': '1',
@@ -75,7 +75,7 @@ describe('Game: get', () => {
     });
 
     test('returns an error if using an invalid object', async () => {
-        expect(() => game.get({'gibberish': 'test'})).toThrow();
+        expect(async () => await game.get({'gibberish': 'test'})).rejects.toThrow();
     });
 });
 
@@ -182,11 +182,11 @@ describe('Game: update', () => {
     });
 
     test('return an error if there are no in-progress games', async () => {
-        expect(() => game.update({'playerId': '1', 'result': 'win'})).toThrow();
+        expect(async () => await game.update({'playerId': '1', 'result': 'win'})).rejects.toThrow();
     });
 
     test('return an error if passing in an invalid player', async () => {
-        expect(() => game.update({'playerId': 'gibberish', 'result': 'win'})).toThrow();
+        expect(async () => await game.update({'playerId': 'gibberish', 'result': 'win'})).rejects.toThrow();
     });
 
     test('return an error if passing in an invalid result', async () => {
@@ -198,6 +198,6 @@ describe('Game: update', () => {
                 'status': 'in_progress'
             }
         ));
-        expect(() => game.update({'playerId': '1', 'result': 'gibberish'})).toThrow();
+        expect(async () => game.update({'playerId': '1', 'result': 'gibberish'})).rejects.toThrow();
     });
 });
