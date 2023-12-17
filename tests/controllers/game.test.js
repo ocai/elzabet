@@ -182,7 +182,7 @@ describe('Game: update', () => {
     });
 
     test('return an error if there are no in-progress games', async () => {
-        expect(async () => await game.update('1', 'win')).rejects.toThrow();
+        expect(async () => await game.update('999', 'win')).rejects.toThrow();
     });
 
     test('return an error if passing in an invalid player', async () => {
@@ -198,6 +198,6 @@ describe('Game: update', () => {
                 'status': 'in_progress'
             }
         ));
-        expect(async () => game.update(gameId, 'gibberish')).rejects.toThrow();
+        expect(async () => await game.update(gameId, 'gibberish')).rejects.toThrow();
     });
 });
