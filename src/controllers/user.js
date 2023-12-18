@@ -56,32 +56,36 @@ function getBetStats(id) {
                 .from('bets')
                 .join('games', 'bets.gameId', '=', 'games.id')
                 .where('bets.userId', '=', id)
-                .then((response) => {
-                    const betsMade = response.length;
+                .then(async (response) => {
+                    const user = await get(id);
 
-                    let options = {};
-                    let earnings = 0;
-                    let numWins = 0;
+                    if (user != undefined) {
+                        const betsMade = response.length;
 
-                    for (let i = 0; i < response.length; i++) {
-                        const key = response[i].option;
-                        options[key] = (options[key] || 0) + 1;
+                        let options = {};
+                        let earnings = 0;
+                        let numWins = 0;
 
-                        if (key == response[i].result) {
-                            earnings += response[i].amount;
-                            numWins++;
-                        } else {
-                            earnings -= response[i].amount;
+                        for (let i = 0; i < response.length; i++) {
+                            const key = response[i].option;
+                            options[key] = (options[key] || 0) + 1;
+
+                            if (key == response[i].result) {
+                                earnings += response[i].amount;
+                                numWins++;
+                            } else {
+                                earnings -= response[i].amount;
+                            }
                         }
-                    }
 
-                    const winPercentage = (numWins / betsMade * 100) || 0;
+                        const winPercentage = (numWins / betsMade * 100) || 0;
 
-                    return {
-                        'betsMade': betsMade,
-                        'optionCounts': options,
-                        'winPercentage': winPercentage,
-                        'earnings': earnings
+                        return {
+                            'betsMade': betsMade,
+                            'optionCounts': options,
+                            'winPercentage': winPercentage,
+                            'earnings': earnings
+                        }
                     }
                 });
         return betStats;        
@@ -136,15 +140,10 @@ function updateAll(points) {
     }
 }
 
-function remove(id) {
-    return 0;
-}
-
 module.exports = {
     create,
     get,
     getBetStats,
     update,
-    updateAll,
-    remove
+    updateAll
 };
