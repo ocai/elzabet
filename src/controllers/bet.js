@@ -54,7 +54,7 @@ function getByGame(gameId, selectQuery = '*') {
 }
 
 // Return all bets a user has made
-function getUserBets(userId) {
+function getByUser(userId) {
     try {
         const bets = dbConn
             .select(['*'])
@@ -100,16 +100,11 @@ function updateByGame(gameId, result) {
     }
 }
 
-function remove(id) {
-    return 0;
-}
-
 module.exports = {
     create,
     getByPlayer,
-    getUserBets,
+    getByUser,
     getByGame,
     updateByGame,
     // calculateUserStats,
-    remove
 };
