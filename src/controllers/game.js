@@ -66,8 +66,6 @@ function get(info) {
     }
 }
 
-// TODO get all in-progress games
-
 /**
  * 
  * @param {*} id: id of the game 
