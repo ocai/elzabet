@@ -27,8 +27,7 @@ setInterval(function() {
 }, the_interval);
 
 // Start Discord Bot
-const discordClient = require('./client');
-discordClient.startClient();
+require('./src/discord/client');
 
 // Start the server 
 const PORT=3000;
