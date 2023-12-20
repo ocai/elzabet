@@ -32,7 +32,6 @@ module.exports = {
 
 		// Collects 2 select menu interactions
 		// TODO: Add logic to handle case where user changes their decision on the same select menu
-		const selectFilter = i => m.content.includes('discord');
 		const collector = response.createMessageComponentCollector({ componentType: ComponentType.StringSelect, time: 3_600_000, max: 2 });
 		collector.on('collect', async i => {
 			const selection = i.values;
