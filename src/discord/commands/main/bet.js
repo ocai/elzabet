@@ -16,7 +16,7 @@ module.exports = {
 				content: 'Place your bet!',
 				ephemeral: true,
 				components: [
-					components.players,
+					await components.players(),
 					components.betOptions,
 					components.confirmButton,
 					components.cancelButton

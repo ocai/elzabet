@@ -30,7 +30,6 @@ function create(info) {
  * @returns 
  * a single game
  */
-
 function get(info) {
     const acceptedFields = [
         'id',
@@ -49,6 +48,50 @@ function get(info) {
         const game = dbConn('games')
             .first(['*'])
             .from('games')
+            .where((builder) => {
+                for (const [key, value] of Object.entries(info)) {
+                    if (acceptedFields.includes(key)) {
+                        builder.where(key, value);
+                    } else {
+                        console.log(`Invalid key: ${key}`);
+                        throw Error("Invalid Object")
+                    }                   
+                }
+            })
+        return game;
+    } catch(error) {
+        console.log("Something went wrong", error);
+        throw(error);
+    }
+}
+
+/**
+ * 
+ * @param {*} info {}
+ * info is an object containing any combination of queryable fields 
+ * @returns 
+ * all games that match
+ */
+function getAll(info) {
+    const acceptedFields = [
+        'id',
+        'playerId',
+        'riotGameId',
+        'riotMatchId',
+        'status',
+        'result',
+        'summonerName',
+        // probably won't use these 2, but they're here
+        'createdAt',
+        'updatedAt'
+    ]
+    try {
+        if ((Object.keys(info).length == 0) || (Object.keys(info).length > acceptedFields.length))
+            throw Error("Invalid Object");
+        const game = dbConn('games')
+            .select(['*'])
+            .from('games')
+            .join('players', 'players.id', '=', 'games.playerId')
             .where((builder) => {
                 for (const [key, value] of Object.entries(info)) {
                     if (acceptedFields.includes(key)) {
@@ -107,5 +150,6 @@ function update(id, result) {
 module.exports = {
     create,
     get,
+    getAll,
     update
 };
