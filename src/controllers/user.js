@@ -7,7 +7,7 @@ function create(info) {
     let userInfo = Object.assign({
         'username': null, // thinking this will be like `#snorlax_tspins`, the one that doesn't change (nicknames change too much)
         'discordId': null, // id of their discord user (identifier from API)
-        'points': 100, // optional, default to 100 if not passed in
+        'points': 1000, // optional, default to 1000 if not passed in
         'createdAt': new Date(),
         'updatedAt': new Date(),
     }, info)
@@ -30,6 +30,18 @@ function get(id) {
             .first(['*'])
             .from('users')
             .where('id', '=', id)
+        return user;
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+}
+
+function getByDiscordId(discordId) {
+    try {
+        const user = dbConn
+            .first(['*'])
+            .from('users')
+            .where('discordId', '=', discordId)
         return user;
     } catch (error) {
         console.error('Unable to connect to the database:', error);
@@ -143,6 +155,7 @@ function updateAll(points) {
 module.exports = {
     create,
     get,
+    getByDiscordId,
     getBetStats,
     update,
     updateAll

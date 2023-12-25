@@ -1,5 +1,8 @@
-const { ComponentType, SlashCommandBuilder } = require('discord.js');
-const components = require('../../components/bet');
+const { SlashCommandBuilder } = require('discord.js');
+const m = require('../../helpers/bet/message');
+const handler = require('../../helpers/responseHandler');
+const user = require('../../../controllers/user');
+const game = require('../../../controllers/game');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -11,47 +14,23 @@ module.exports = {
 	async execute(interaction) {
 		let response;
 		const amount = interaction.options.getInteger('amount');
-		if (amount) {
-			response = await interaction.reply({
-				content: 'Place your bet!',
-				ephemeral: true,
-				components: [
-					await components.players(),
-					components.betOptions,
-					components.confirmButton,
-					components.cancelButton
-				]
-			});
-		} else {
-			const testBalance = 100;
-			await interaction.reply({
-				content: `Your current balance is ${testBalance}\n Type '/bet <amount>' to bet!\n EXAMPLE: /bet 100`,
-				ephemeral: true
-			})
-		}
-
-		// Collects 2 select menu interactions
-		// TODO: Add logic to handle case where user changes their decision on the same select menu
-		const collector = response.createMessageComponentCollector({ componentType: ComponentType.StringSelect, time: 3_600_000, max: 2 });
-		collector.on('collect', async i => {
-			const selection = i.values;
-			await i.deferUpdate();
-			return selection;
+		const betUser = await user.getByDiscordId(interaction['user']['id']) || await user.create({
+			'username': interaction['user']['username'],
+			'discordId': interaction['user']['id']
 		});
-
-		collector.on('end', async (collected) => {
-			const responses = collected.map((menuInteraction) => {
-				// console.log(menuInteraction);
-				// console.log(menuInteraction.id);
-				return menuInteraction.values[0];
-			});
-			console.log('responses: ', responses);
-			const confirmation = await response.awaitMessageComponent({ time: 60000 });
-			if (confirmation.customId === 'confirm') {
-				await confirmation.update({ content: `Confirming your bet of ${amount} points for ${responses[0]} to ${responses[1]}.`, components: [] });
-			} else if (confirmation.customId === 'cancel') {
-				await confirmation.update({ content: 'Action cancelled', components: [] });
+		if (!amount) {
+			const balance = betUser['points']
+			await interaction.reply(m.balanceMessage(balance));
+		} else if (amount <= betUser['points']) {
+			response = await interaction.reply(await m.betMessage(amount));
+			info = {
+				'amount': amount,
+				'games': await game.getAll({ 'status': 'in_progress'}),
+				'user': betUser
 			}
-		})
+			handler.handleResponse(response, info)
+		} else if (amount > betUser['points']) {
+			await interaction.reply(m.exceedsBalance(amount, betUser['points']));
+		}
 	},
 };

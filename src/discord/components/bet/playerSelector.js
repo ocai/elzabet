@@ -15,8 +15,6 @@ async function players() {
             }
         }
     
-        console.log(summonerNames);
-    
         for (const name of summonerNames) {
             options.push(new StringSelectMenuOptionBuilder()
                 .setLabel(name)
@@ -24,14 +22,10 @@ async function players() {
             );
         }
     
-        console.log(options);
-    
         const select = new StringSelectMenuBuilder()
             .setCustomId('players')
             .setPlaceholder('Pick a player to bet on!')
             .addOptions(...options);
-    
-        console.log(select);
     
         const players = new ActionRowBuilder()
             .addComponents(select)

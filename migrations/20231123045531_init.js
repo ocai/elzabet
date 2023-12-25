@@ -8,15 +8,15 @@ exports.up = function(knex) {
     .createTable('users', function (table) {
       table.increments('id');
       table.string('username').notNullable();
-      table.string('discordId').notNullable();
+      table.string('discordId').unique().notNullable();
       table.integer('points');
       table.dateTime('createdAt', new Date());
       table.dateTime('updatedAt', new Date());
     })
     .createTable('players', function (table) {
       table.increments('id');
-      table.string('summonerName').notNullable();
-      table.string('riotId').notNullable();
+      table.string('summonerName').unique().notNullable();
+      table.string('riotId').unique().notNullable();
       table.integer('wins');
       table.integer('losses');
       table.dateTime('createdAt', new Date());
