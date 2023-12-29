@@ -18,19 +18,25 @@ module.exports = {
 			'username': interaction['user']['username'],
 			'discordId': interaction['user']['id']
 		});
-		if (!amount) {
-			const balance = betUser['points']
-			await interaction.reply(m.balanceMessage(balance));
-		} else if (amount <= betUser['points']) {
-			response = await interaction.reply(await m.betMessage(amount));
-			info = {
-				'amount': amount,
-				'games': await game.getAll({ 'status': 'in_progress'}),
-				'user': betUser
+		const bettableGames = await game.getAll({'status': 'bettable'});
+
+		if (bettableGames instanceof Error || (Object.keys(bettableGames).length == 0)) {
+			await interaction.reply(m.noActiveGames());
+		} else {
+			if (!amount) {
+				const balance = betUser['points']
+				await interaction.reply(m.balanceMessage(balance));
+			} else if (amount <= betUser['points']) {
+				response = await interaction.reply(await m.betMessage(amount));
+				info = {
+					'amount': amount,
+					'games': bettableGames,
+					'user': betUser
+				}
+				handler.handleResponse(response, info)
+			} else if (amount > betUser['points']) {
+				await interaction.reply(m.exceedsBalance(amount, betUser['points']));
 			}
-			handler.handleResponse(response, info)
-		} else if (amount > betUser['points']) {
-			await interaction.reply(m.exceedsBalance(amount, betUser['points']));
 		}
 	},
 };

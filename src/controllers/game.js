@@ -2,9 +2,19 @@
 
 const { dbConn } = require('../../config/db.config');
 
+/**
+ * 
+ * @param {*} info {}
+ * info is an object containing fields needed to create a game (playerId, riotGameId, riotMatchId)
+ * @returns 
+ * the created game
+ */
 function create(info) {
     let gameInfo = Object.assign({
-        'status': "in_progress",
+        'playerId': null,
+        'riotGameId': null,
+        'riotMatchId': null,
+        'status': 'bettable',
         'result': null,
         'createdAt': new Date(),
         'updatedAt': new Date(),
@@ -88,10 +98,10 @@ function getAll(info) {
     try {
         if ((Object.keys(info).length == 0) || (Object.keys(info).length > acceptedFields.length))
             throw Error("Invalid Object");
-        const game = dbConn('games')
-            .select(['*'])
+        const games = dbConn('games')
+            .select('games.*', 'players.summonerName', 'players.riotId', 'players.wins', 'players.losses')
             .from('games')
-            .join('players', 'players.id', '=', 'games.playerId')
+            .join('players', 'games.playerId', '=', 'players.id')
             .where((builder) => {
                 for (const [key, value] of Object.entries(info)) {
                     if (acceptedFields.includes(key)) {
@@ -100,9 +110,9 @@ function getAll(info) {
                         console.log(`Invalid key: ${key}`);
                         throw Error("Invalid Object")
                     }                   
-                }
+                }                
             })
-        return game;
+        return games;
     } catch(error) {
         console.log("Something went wrong", error);
         throw(error);
@@ -113,7 +123,8 @@ function getAll(info) {
  * 
  * @param {*} id: id of the game 
  * @param {*} result (win | loss)
- * @returns 
+ * @returns
+ * the game that was updated
  */
 function update(id, result) { 
     const acceptedResults = ['win', 'loss'];
@@ -123,7 +134,9 @@ function update(id, result) {
             throw Error(`Invalid result: ${result}`);
         } else {
             const game = dbConn('games')
-                .where('id', '=', id).andWhere('status', '=', 'in_progress')
+                .where('id', '=', id).andWhere(function () {
+                    this.where('status', '=', 'bettable').orWhere('status', '=', 'in_progress')
+                })
                 .update({
                     'result': result,
                     'status': 'final',
@@ -147,9 +160,48 @@ function update(id, result) {
     }
 }
 
+/**
+ * 
+ * @param {*} id: id of the game 
+ * @param {*} status (bettable | in_progress | final)
+ * @returns
+ * the game that was updated
+ */
+function updateStatus(id, status) {
+    const acceptedStatuses = ['bettable', 'in_progress', 'final'];    
+    try {
+        if (!acceptedStatuses.includes(status)) {
+            console.log('in here')
+            throw Error(`Invalid status: ${status}`);
+        } else {
+            const game = dbConn('games')
+            .where('id', '=', id)
+            .update({
+                'status': status,
+                'updatedAt': new Date()
+            })
+            .then((res) => {
+                if (!res) {
+                    console.log(`Invalid Query for game with id ${id}`)
+                    throw Error(`Invalid Query for game with id ${id}`);
+                }
+                const updatedGame = get({'id': id}).then((response) => {
+                    return response;
+                });
+                return updatedGame;
+            })
+            return game;
+        }
+    } catch (error) {
+        console.log("Something went wrong: ", error)
+        throw(error);
+    }
+}
+
 module.exports = {
     create,
     get,
     getAll,
-    update
+    update,
+    updateStatus
 };

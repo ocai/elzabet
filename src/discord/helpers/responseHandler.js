@@ -5,8 +5,11 @@
  */
 
 const bet = require('../../controllers/bet');
+const game = require('../../controllers/game');
 const user = require('../../controllers/user');
 const m = require('./bet/message');
+const { table } = require('table');
+const { inlineCode, codeBlock } = require('discord.js');
 
 async function handleResponse(response, info = {}) {
 
@@ -26,6 +29,7 @@ async function handleResponse(response, info = {}) {
 
     collector.on('end', async (collected) => {
         const confirmation = collected.last();
+
         // TODO Handle bet lockout time restriction here
         await handleConfirm(collected, info, confirmation);
     })
@@ -46,26 +50,50 @@ async function handleConfirm(collected, info, confirmation) {
                     betChoice = selected[0];
             }
         }
-        const game = info['games'].find((x) => x['summonerName'] == playerChoice);
+
+        // returns the 1st element that matches in the bettable games array
+        const bettableGame = info['games'].find((x) => x['summonerName'] == playerChoice);
+
         if (playerChoice && betChoice) {
-            // Create the bet
-            bet.create({
-                'userId': info['user']['id'],
-                'gameId': game['id'],
-                'playerId': game['playerId'],
-                'option': betChoice,
-                'amount': info['amount']
-            });
-            // Deduct points from the user
-            const updated = await user.update(info['user']['id'], info['amount']*-1);
-            await confirmation.update(m.betConfirmation(info['amount'], playerChoice, betChoice, updated['points']));
+            // retrieve the latest game status since it may no longer be bettable
+            const currentGame = await game.get({'id': bettableGame.id});
+
+            if (currentGame.status == 'bettable') {
+                console.log('creating the bet');
+
+                // Create the bet
+                bet.create({
+                    'userId': info['user']['id'],
+                    'gameId': bettableGame['id'],
+                    'playerId': bettableGame['playerId'],
+                    'option': betChoice,
+                    'amount': info['amount']
+                });
+
+                // Deduct points from the user
+                const updated = await user.update(info['user']['id'], info['amount']*-1);
+                await confirmation.update(m.betConfirmation(info['amount'], playerChoice, betChoice, updated['points']));
+            } else {
+                // TODO return bets in a table here
+                const bets = await bet.getByGame(bettableGame['id']);
+                let data = [['#', 'User', 'Option', 'Amount']];
+                let userIndex = 1;
+                console.log(bets);
+        
+                for (let i = 0; i < bets.length; i++) {
+                    const betUser = await user.get(bets[i].userId);
+                    data.push([userIndex.toString(), betUser.username, bets[i].option, bets[i].amount]);
+                    userIndex++;
+                }
+        
+                await confirmation.update({content: `Sorry, the betting period has expired. Here are the list of bets:\n${codeBlock(table(data))}`, components: []})
+            }
         } else {
             await confirmation.update({content: 'You did not select enough options. Please try again.', ephemeral: true, components: []})
         }
     } else if (confirmation.customId == 'cancel') {
         await confirmation.update({content: 'Understood. Cancelling the bet.', components: []})
     }
-    
 }
 
 module.exports = { handleResponse }

@@ -2,6 +2,7 @@
 
 const components = require('../../components/bet');
 const axios = require('axios');
+// const 
 
 function activeGame(player) {
     return {
@@ -9,6 +10,13 @@ function activeGame(player) {
         https://www.op.gg/summoners/na/${player}-NA1/ingame
         `,
         components: []
+    }
+}
+
+function noActiveGames() {
+    return {
+        content: 'No active games were found. Please try again.',
+        ephemeral: true
     }
 }
 
@@ -47,6 +55,13 @@ function betConfirmation(amount, player, option, balance) {
     }
 }
 
+function betTable() {
+    return {
+        content: `test bet table`,
+        ephemeral: true
+    }
+}
+
 /**
  * 
  * @param {*} message: A structured Discord Message object
@@ -71,6 +86,8 @@ module.exports = {
     balanceMessage,
     betConfirmation,
     betMessage,
+    betTable,
     exceedsBalance,
+    noActiveGames,
     sendMessage
 }

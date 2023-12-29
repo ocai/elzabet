@@ -19,6 +19,17 @@ function get(id) {
     }
 }
 
+function getAll() {
+    try {
+        const players = dbConn
+            .pluck('summonerName')
+            .from('players')
+        return players;
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+}
+
 function getBySummonerName(summonerName) {
     try {
         const player = dbConn
@@ -53,6 +64,7 @@ function create(info) {
 
 module.exports = {
     get,
+    getAll,
     getBySummonerName,
     create
 }

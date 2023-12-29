@@ -5,7 +5,7 @@ const games = require('../../../controllers/game');
 const { ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js');
 
 async function players() {
-    return await games.getAll({ 'status': 'in_progress'}).then((res) => {
+    return await games.getAll({ 'status': 'bettable'}).then((res) => {
         let summonerNames = [];
         let options = [];
     

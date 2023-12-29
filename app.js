@@ -23,7 +23,7 @@ app.use(router);
 var minutes = 2, the_interval = minutes * 60 * 1000;
 setInterval(function() {
     console.log("Triggers every 2 min")
-    // main.processGames();
+    main.processGames();
 }, the_interval);
 
 // Start Discord Bot

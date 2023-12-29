@@ -17,11 +17,17 @@ router.get('/hello-world', function(req, res, next) {
   res.send("Hello world");
 });
 
-router.get('/test/:summonerName', function(req, res) { 
-  const test = riot.getActiveGameBySummoner(req.params.summonerName);
-  test.then((response) => {
-    res.json(response.data); 
-  });
+router.get('/test/:summonerName', async function(req, res) {
+  try {
+    const test = await riot.getActiveGameBySummoner(req.params.summonerName);
+    res.json(test.data); 
+  } catch (error) {
+    error = {
+      'status_code': 404,
+      'message': `No active game for summoner: ${req.params.summonerName}`
+    }
+    res.status(404).json(error);
+  }
 });
 
 // Bet Routes
