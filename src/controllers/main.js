@@ -1,8 +1,6 @@
 'use strict'
 
 const riot = require('../services/riot');
-// const riot = require('../services/__mocks__/riot');
-// const discord = require('./discord');
 const game = require('./game');
 const player = require('./player');
 const bet = require('./bet');
@@ -53,14 +51,32 @@ async function handleResponse(status, data) {
             let currentGame = await game.get({'playerId': data['playerId'], 'status': 'in_progress'});
             if (currentGame) {
                 console.log('currentGame: ', currentGame);
-                const res = await riot.getMatch(currentGame.riotMatchId);
-                const result = riot.extractResult(res, data['summonerName']);
-                const updated = await game.update(currentGame.id, result);
-                await resolveBets(updated);
-                const resultMessage = await message.betResults(currentGame.id);
-                if (resultMessage)
-                    message.sendMessage(resultMessage);
-                return updated;
+                let updated;
+                try {
+                    const res = await riot.getMatch(currentGame.riotMatchId);
+                    const result = riot.extractResult(res, data['summonerName']);
+                    updated = await game.update(currentGame.id, result);
+                } catch (error) {
+                    console.log('Error updating game result: ', error);
+                    // TODO: Call function to undo/fix game state? Possibly after enough retires?
+                    return updated;
+                }
+
+                try {
+                    await resolveBets(updated);
+                } catch(error) {
+                    console.log('updated game: ', updated);
+                    console.log('Error resolving bets: ', error);
+                }
+                try {
+                    const resultMessage = await message.betResults(currentGame.id);
+                    if (resultMessage)
+                        message.sendMessage(resultMessage);
+                    return updated;
+                } catch (error) {
+                    console.log('Error sending results: ', error);
+                    return null;
+                }
             } else {
                 return null;
             }
