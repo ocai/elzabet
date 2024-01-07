@@ -1,6 +1,9 @@
 'user strict'
 
 const { dbConn } = require('../../config/db.config');
+const user = require('../controllers/user');
+const player = require('../controllers/player');
+const game = require('../controllers/game');
 
 /*
 Bet creation restrictions:
@@ -34,6 +37,7 @@ function getByPlayer(playerId) {
             .select(['*'])
             .from('bets')
             .where('playerId', '=', playerId)
+            .then((bets) => { return preloadAll(bets); })
         return bets;
     } catch (error) {
         console.error('Unable to connect to the database:', error);
@@ -41,12 +45,13 @@ function getByPlayer(playerId) {
 }
 
 // List of bets for a particular game
-function getByGame(gameId, selectQuery = '*') {
+function getByGame(gameId) {
     try {
         const bets = dbConn
-            .select([selectQuery])
+            .select(['*'])
             .from('bets')
             .where('gameId', '=', gameId)
+            .then((bets) => { return preloadAll(bets); })
         return bets;
     } catch (error) {
         console.error('Unable to connect to the database:', error);
@@ -60,20 +65,12 @@ function getByUser(userId) {
             .select(['*'])
             .from('bets')
             .where('userId', '=', userId)
+            .then((bets) => { return preloadAll(bets); })
         return bets;
     } catch (error) {
         console.error('Unable to connect to the database:', error);
     }
 }
-
-// TODO
-// function calculateUserStats(userId) {
-//     return getUserBets(userId)
-//         .then((bets) => {
-//             let optionStats = {};
-//             let winPercentage;
-//         })
-// }
 
 // Resolve bets pertaining to a game id
 function updateByGame(gameId, result) {
@@ -92,11 +89,34 @@ function updateByGame(gameId, result) {
                     'result': 'loss',
                     'updatedAt': new Date()
                 })
-            return Promise.all([wins, losses]);
+            return Promise.all([wins, losses]).then(async (res) => {
+                return await getByGame(gameId);
+            });
         })
         return res;
     } catch (error) {
         console.error(`Error updating gameId ${gameId} with result ${result}`, error);
+    }
+}
+
+async function preloadAll(bets) {
+    return Promise.all(bets.map(async (bet) => {
+        let objects = await preload(bet);
+        return Object.assign(bet, objects);
+    }))
+}
+
+async function preload(bet) {
+    const objects = [
+        user.get(bet.userId),
+        player.get(bet.playerId),
+        game.get({'id': bet.gameId})
+    ];
+    const resolved = await Promise.all(objects);
+    return {
+        'user': resolved[0],
+        'player': resolved[1],
+        'game': resolved[2]
     }
 }
 

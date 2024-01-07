@@ -22,7 +22,6 @@ function get(id) {
 function getAll() {
     try {
         const players = dbConn
-            .pluck('summonerName')
             .from('players')
         return players;
     } catch (error) {

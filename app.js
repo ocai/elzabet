@@ -22,7 +22,7 @@ app.use(router);
 // TODO: Change this back to 2 min (this is just for testing currently)
 var minutes = 2, the_interval = minutes * 60 * 1000;
 setInterval(function() {
-    console.log("Triggers every 2 min")
+    // console.log("Triggers every 2 min")
     main.processGames();
 }, the_interval);
 

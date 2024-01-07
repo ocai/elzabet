@@ -2,11 +2,14 @@
 
 const components = require('../../components/bet');
 const axios = require('axios');
-// const 
+const bet = require('../../../controllers/bet');
+const game = require('../../../controllers/game');
+// const { table } = require('table');
+const { codeBlock } = require('discord.js');
 
 function activeGame(player) {
     return {
-        content: `${player} is in a game! \n \
+        content: `${player} is in a game! Type \`/bet\` to bet on their game!\n \
         https://www.op.gg/summoners/na/${player}-NA1/ingame
         `,
         components: []
@@ -48,17 +51,54 @@ function exceedsBalance(amount, balance) {
 }
 
 function betConfirmation(amount, player, option, balance) {
+    const map = {
+        'win': 'win',
+        'loss': 'lose'
+    }
     return {
-        content: `Confirming your bet of ${amount} on ${player} to ${option}.\n Your new point balance is ${balance}.`,
+        content: `Confirming your bet of ${amount} on ${player} to ${map[option]}.\n Your new point balance is ${balance}.`,
         ephemeral: true,
         components: []
     }
 }
 
-function betTable() {
+async function betTable(gameId) {
+    const bets = await bet.getByGame(gameId);
+    const betGame = await game.getWithPlayer(gameId);
+    const betPlayer = betGame.player;
+    if (bets.length < 1) {
+        return {
+            content: `The betting period for ${betPlayer.summonerName} has expired.`,
+            components: []
+        }
+    }
+
+    let str = "";
+
+    bets.forEach((betObj) => {
+        str += `${betObj.user.username} bets ${betObj.amount} points for ${betPlayer.summonerName} to ${betObj.option == 'win' ? 'win' : 'lose'}\n`;  
+    });
+
     return {
-        content: `test bet table`,
-        ephemeral: true
+        content: `Bets are in for ${betPlayer.summonerName}'s game:\n${codeBlock(str.trimEnd())}`, 
+        components: []
+    }
+}
+
+async function betResults(gameId) {
+    const bets = await bet.getByGame(gameId);
+    const betGame = await game.getWithPlayer(gameId);
+    if (bets.length < 1)
+        return null;
+    let str = "";
+
+    bets.forEach((betObj) => {
+        str += `${betObj.user.username} bet ${betObj.amount} points and ${betObj.result == 'win' ? 'won' : 'lost'}!\n`;  
+    })
+
+    return {
+        content: `${betGame.player.summonerName} has ${betGame.result == 'win' ? 'won' : 'lost'}!\n${codeBlock(str.trimEnd())}`, 
+        components: []
     }
 }
 
@@ -86,6 +126,7 @@ module.exports = {
     balanceMessage,
     betConfirmation,
     betMessage,
+    betResults,
     betTable,
     exceedsBalance,
     noActiveGames,

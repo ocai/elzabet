@@ -12,16 +12,19 @@ function getSummonerInfo(name) {
 
 function getActiveGame(encryptedId) {
 	const promise = axios.get(
-		`${BASE_URL_V4}/spectator/v4/active-games/by-summoner/${encryptedId}?api_key=${process.env.RIOT_KEY}`
+		`${BASE_URL_V4}/spectator/v4/active-games/by-summoner/${encryptedId}?api_key=${process.env.RIOT_KEY}`,
+		{ validateStatus: false }
 	);
 	return promise;
 };
 
 function getActiveGameBySummoner(summonerName) {
 	try {
+		console.log('getSummonerInfo: ', summonerName);
 		const promise = getSummonerInfo(summonerName)
 			.then((response) => {
 				let encryptedId = response.data.id;
+				console.log('getActiveGame: ', encryptedId);
 				return getActiveGame(encryptedId)
 			})
 		return promise;
@@ -32,6 +35,7 @@ function getActiveGameBySummoner(summonerName) {
 }
 
 function getMatch(matchId) {
+	console.log('getMatch: ', matchId);
 	const promise = axios.get(`${BASE_URL_V5}/match/v5/matches/${matchId}?api_key=${process.env.RIOT_KEY}`)
 		.then((res) => {
 			return res;
@@ -39,7 +43,23 @@ function getMatch(matchId) {
     return promise;
 }
 
+function extractResult(matchResponse, summoner) {
+    let result;
+    if (matchResponse.status == 200) {
+		const participants = matchResponse.data.info.participants;
+		participants.forEach((player) => {
+			if (player.summonerName == summoner) {
+                result = player.win ? 'win' : 'loss'
+            }	
+		})
+        return result;
+	} else {
+		return null;
+	}	
+}
+
 module.exports = {
 	getActiveGameBySummoner,
-	getMatch
+	getMatch,
+	extractResult
 }

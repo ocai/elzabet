@@ -8,7 +8,7 @@ const options = [
         .setValue('win'),
     new StringSelectMenuOptionBuilder()
         .setLabel('Lose')
-        .setValue('lose'),
+        .setValue('loss'),
 ]
 
 const select = new StringSelectMenuBuilder()

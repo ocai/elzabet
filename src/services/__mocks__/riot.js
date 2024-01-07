@@ -20,10 +20,25 @@ function getMatch(param) {
         const match = require('../../../tests/support/sample_responses/riot/match_details.json');
         return Promise.resolve({ 'status': 200, 'data': match });
     }
-    
+}
+
+function extractResult(matchResponse, summoner) {
+    let result;
+    if (matchResponse.status == 200) {
+		const participants = matchResponse.data.info.participants;
+		participants.forEach((player) => {
+			if (player.summonerName == summoner) {
+                result = player.win ? 'win' : 'loss'
+            }	
+		})
+        return result;
+	} else {
+		return null;
+	}	
 }
 
 module.exports = {
 	getActiveGameBySummoner,
-	getMatch
+	getMatch,
+    extractResult
 }

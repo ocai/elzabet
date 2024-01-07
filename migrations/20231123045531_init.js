@@ -24,7 +24,7 @@ exports.up = function(knex) {
     })
     .createTable('games', function(table) {
       table.increments('id');
-      table.string('playerId').notNullable();
+      table.integer('playerId').notNullable();
       table.string('riotGameId').notNullable();
       table.string('riotMatchId').notNullable();
       table.string('status').notNullable();
@@ -34,9 +34,9 @@ exports.up = function(knex) {
     })
     .createTable('bets', function(table) {
       table.increments('id');
-      table.string('userId').notNullable();
-      table.string('gameId').notNullable();
-      table.string('playerId').notNullable();
+      table.integer('userId').notNullable();
+      table.integer('gameId').notNullable();
+      table.integer('playerId').notNullable();
       table.string('option').notNullable();
       table.integer('amount').notNullable();
       table.string('result');

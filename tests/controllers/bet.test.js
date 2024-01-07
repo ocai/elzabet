@@ -5,8 +5,8 @@ const { dbConn } = require('../../config/db.config');
 const f = require('../support/factory');
 
 test('Bet: create', async () => {
-    const res = await bet.create({'userId': 1337, 'gameId': 'test', 'playerId': 1337, 'option': 'win', 'amount': 100 });
-    expect(res['gameId']).toBe('test');
+    const res = await bet.create({'userId': 1337, 'gameId': 1, 'playerId': 1337, 'option': 'win', 'amount': 100 });
+    expect(res['gameId']).toBe(1);
 });
 
 test('Bet: getByPlayer', async () => {
@@ -34,6 +34,7 @@ test('Bet: getByGame', async () => {
     await Promise.all([bet1, bet2, bet3]);
     const bets = await bet.getByGame(game);
     expect(bets.length).toBe(3);
+    console.log('bets: ', bets);
     const ownedByGame = (item) => { return item['gameId'] == game };
     expect(bets.every(ownedByGame)).toBe(true);
 });

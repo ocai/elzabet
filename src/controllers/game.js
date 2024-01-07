@@ -1,6 +1,7 @@
 'user strict'
 
 const { dbConn } = require('../../config/db.config');
+const player = require('../controllers/player');
 
 /**
  * 
@@ -198,10 +199,28 @@ function updateStatus(id, status) {
     }
 }
 
+function getWithPlayer(id) {
+    try {
+        const game = dbConn
+            .first(['*'])
+            .from('games')
+            .where('id', '=', id)
+            .then(async (game) => { return Object.assign(game, {'player': await player.get(game.playerId)}); })
+        return game;
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+}
+
+async function preloadPlayer(game) {
+    
+}
+
 module.exports = {
     create,
     get,
     getAll,
+    getWithPlayer,
     update,
     updateStatus
 };

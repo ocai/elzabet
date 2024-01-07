@@ -8,7 +8,7 @@ describe('Game: get', () => {
     test('returns a game correctly using the game id', async () => {
         const [gameId] = await dbConn('games').insert(f.game(
             {
-                'playerId': '1',
+                'playerId': 1,
                 'riotGameId': '4846836721',
                 'riotMatchId': 'NA1_4846836721',
                 'status': 'in_progress',
@@ -18,7 +18,7 @@ describe('Game: get', () => {
         const res = await game.get({'id': gameId});
         expect(res).toMatchObject({
             'id': expect.any(Number),
-            'playerId': '1',
+            'playerId': 1,
             'riotGameId': '4846836721',
             'riotMatchId': 'NA1_4846836721',
             'status': 'in_progress',
@@ -31,7 +31,7 @@ describe('Game: get', () => {
     test('returns a game correctly using the playerId AND riotGameId', async () => {
         const [gameId] = await dbConn('games').insert(f.game(
             {
-                'playerId': '1',
+                'playerId': 1,
                 'riotGameId': '4846836721',
                 'riotMatchId': 'NA1_4846836721',
                 'status': 'in_progress',
@@ -41,7 +41,7 @@ describe('Game: get', () => {
         const res = await game.get({'playerId': '1', 'riotGameId': '4846836721'});
         expect(res).toMatchObject({
             'id': expect.any(Number),
-            'playerId': '1',
+            'playerId': 1,
             'riotGameId': '4846836721',
             'riotMatchId': 'NA1_4846836721',
             'status': 'in_progress',
@@ -54,17 +54,17 @@ describe('Game: get', () => {
     test('returns a game correctly using the playerId AND riotMatchId', async () => {
         const [gameId] = await dbConn('games').insert(f.game(
             {
-                'playerId': '1',
+                'playerId': 1,
                 'riotGameId': '4846836721',
                 'riotMatchId': 'NA1_4846836721',
                 'status': 'in_progress',
                 'result': 'loss'
             }
         ));
-        const res = await game.get({'playerId': '1', 'riotMatchId': 'NA1_4846836721'});
+        const res = await game.get({'playerId': 1, 'riotMatchId': 'NA1_4846836721'});
         expect(res).toMatchObject({
             'id': expect.any(Number),
-            'playerId': '1',
+            'playerId': 1,
             'riotGameId': '4846836721',
             'riotMatchId': 'NA1_4846836721',
             'status': 'in_progress',
@@ -77,13 +77,25 @@ describe('Game: get', () => {
     test('returns an error if using an invalid object', async () => {
         expect(async () => await game.get({'gibberish': 'test'})).rejects.toThrow();
     });
+
+    test('getWithPlayer', async () => {
+        const [playerId] = await dbConn('players').insert(f.player());
+        const [gameId] = await dbConn('games').insert(f.game({'playerId': playerId }))
+        const res = await game.getWithPlayer(gameId);
+        expect(res.player).toBeTruthy();
+    })
+
+    // test('returns null if not found', async () => {
+    //     const res = await game.get({'playerId': 11});
+    //     expect(res).toBe(null);
+    // })
 });
 
 describe('Game: create', () => {
     test('returns a game after creating an in-progress game', async () => {
         const res = await game.create(
             {
-                'playerId': '1',
+                'playerId': 1,
                 'riotGameId': '4846836721',
                 'riotMatchId': 'NA1_4846836721',
                 'status': 'in_progress'
@@ -91,7 +103,7 @@ describe('Game: create', () => {
         );
         expect(res).toMatchObject({
             'id': expect.any(Number),
-            'playerId': '1',
+            'playerId': 1,
             'riotGameId': '4846836721',
             'riotMatchId': 'NA1_4846836721',
             'status': 'in_progress',
@@ -104,7 +116,7 @@ describe('Game: create', () => {
     test('returns a game after creating a completed game', async () => {
         const res = await game.create(
             {
-                'playerId': '1',
+                'playerId': 1,
                 'riotGameId': '4846836721',
                 'riotMatchId': 'NA1_4846836721',
                 'status': 'final',
@@ -113,7 +125,7 @@ describe('Game: create', () => {
         );
         expect(res).toMatchObject({
             'id': expect.any(Number),
-            'playerId': '1',
+            'playerId': 1,
             'riotGameId': '4846836721',
             'riotMatchId': 'NA1_4846836721',
             'status': 'final',
@@ -126,7 +138,7 @@ describe('Game: create', () => {
     test('actually creates a game in the DB', async() => {
         const res = await game.create(
             {   
-                'playerId': '1',
+                'playerId': 1,
                 'riotGameId': '4846836721',
                 'riotMatchId': 'NA1_4846836721',
                 'status': 'final',
@@ -142,7 +154,7 @@ describe('Game: update', () => {
     test('updates an in-progress game in the DB with a loss', async () => {
         const [gameId] = await dbConn('games').insert(f.game(
             {   
-                'playerId': '1',
+                'playerId': 1,
                 'riotGameId': '4846836721',
                 'riotMatchId': 'NA1_4846836721',
                 'status': 'in_progress'
@@ -150,7 +162,7 @@ describe('Game: update', () => {
         ));
         const updatedGame = await game.update(gameId, 'loss');
         expect(updatedGame).toMatchObject({
-            'playerId': '1',
+            'playerId': 1,
             'riotGameId': '4846836721',
             'riotMatchId': 'NA1_4846836721',
             'status': 'final',
@@ -163,7 +175,7 @@ describe('Game: update', () => {
     test('updates an in-progress game in the DB with a win', async () => {
         const [gameId] = await dbConn('games').insert(f.game(
             {   
-                'playerId': '1',
+                'playerId': 1,
                 'riotGameId': '4846836721',
                 'riotMatchId': 'NA1_4846836721',
                 'status': 'in_progress'
@@ -171,7 +183,7 @@ describe('Game: update', () => {
         ));
         const updatedGame = await game.update(gameId, 'win');
         expect(updatedGame).toMatchObject({
-            'playerId': '1',
+            'playerId': 1,
             'riotGameId': '4846836721',
             'riotMatchId': 'NA1_4846836721',
             'status': 'final',
@@ -192,7 +204,7 @@ describe('Game: update', () => {
     test('return an error if passing in an invalid result', async () => {
         const [gameId] = await dbConn('games').insert(f.game(
             {   
-                'playerId': '1',
+                'playerId': 1,
                 'riotGameId': '4846836721',
                 'riotMatchId': 'NA1_4846836721',
                 'status': 'in_progress'

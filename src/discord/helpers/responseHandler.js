@@ -38,7 +38,7 @@ async function handleResponse(response, info = {}) {
 async function handleConfirm(collected, info, confirmation) {
     // Extract player and option choices from game info
     const playerChoices = info['games'].map((game) => { return game['summonerName']});
-    const betChoices = ['win', 'lose'];
+    const betChoices = ['win', 'loss'];
     if (confirmation.customId == 'confirm') {
         let playerChoice, betChoice, selected;
         for (const [_, interaction] of collected) {
@@ -75,18 +75,7 @@ async function handleConfirm(collected, info, confirmation) {
                 await confirmation.update(m.betConfirmation(info['amount'], playerChoice, betChoice, updated['points']));
             } else {
                 // TODO return bets in a table here
-                const bets = await bet.getByGame(bettableGame['id']);
-                let data = [['#', 'User', 'Option', 'Amount']];
-                let userIndex = 1;
-                console.log(bets);
-        
-                for (let i = 0; i < bets.length; i++) {
-                    const betUser = await user.get(bets[i].userId);
-                    data.push([userIndex.toString(), betUser.username, bets[i].option, bets[i].amount]);
-                    userIndex++;
-                }
-        
-                await confirmation.update({content: `Sorry, the betting period has expired. Here are the list of bets:\n${codeBlock(table(data))}`, components: []})
+                await confirmation.update(message.betTable(bettableGame['id']));
             }
         } else {
             await confirmation.update({content: 'You did not select enough options. Please try again.', ephemeral: true, components: []})

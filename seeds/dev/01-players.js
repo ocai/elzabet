@@ -8,7 +8,7 @@ exports.seed = async function(knex) {
   await knex('players').insert([
     {
       id: 1, 
-      summonerName: 'ElzisRad',
+      summonerName: 'ElzIsRad',
       riotId: 'EL4AyQy_bgCXOmtfRXE_q9vqQGy8IcDS03Lg_yWU0u2NcuY',
       wins: 0,
       losses: 0,
