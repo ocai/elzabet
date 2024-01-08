@@ -7,7 +7,7 @@
 - mysql
 - .env
 
-Put the `.env` file at the project root directory
+Put the `.env` file at the project root directory - Get this from Me.
 
 ```
 npm install
