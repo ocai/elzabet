@@ -17,7 +17,8 @@ async function processGames() {
                 'data': {
                     'playerId': p.id,
                     'summonerName': p.summonerName,
-                    'riotGameId': res.data['gameId']
+                    'riotGameId': res.data['gameId'],
+                    'gameStartTime': res.data['gameStartTime']
                 }
             }
         }))
@@ -110,6 +111,17 @@ async function resolveBets(currentGame) {
 
 /**
  * 
+ * @param {*} timestamp Riot's game start timestmap
+ * Prevents in progress games from being created in our DB if the time is too past
+ * Helpful on application startup if a game is currently going
+ */
+function validateGame(timestamp) {
+    const maxDiff = 60_000*5;
+    return (Date.now() - timestamp < maxDiff) || (timestamp == 0)
+}
+
+/**
+ * 
  * @param {*} data Object containing playerId, riotGameId, summonerName
  * @returns a game object
  */
@@ -117,19 +129,26 @@ async function handleGame(data) {
     const gameData = {'playerId': data['playerId'], 'riotGameId': data['riotGameId']}
     // get game by id
     let currentGame = await game.get(gameData);
+    console.log('data: ', data);
+    console.log('currentGame pulled: ', currentGame);
 
     if (!currentGame) {
-        const newGame = game.create({
-            'playerId': data.playerId,
-            'riotGameId': data.riotGameId,
-            'riotMatchId': `NA1_${data.riotGameId}`,
-            'status': 'bettable',
-            'result': null,
-            'createdAt': new Date(),
-            'updatedAt': new Date()
-        });
-        await message.sendMessage(message.activeGame(data['summonerName']));
-        return newGame;
+        if (validateGame(data['gameStartTime'])) {
+            const newGame = game.create({
+                'playerId': data.playerId,
+                'riotGameId': data.riotGameId,
+                'riotMatchId': `NA1_${data.riotGameId}`,
+                'status': 'bettable',
+                'result': null,
+                'createdAt': new Date(),
+                'updatedAt': new Date()
+            });
+            await message.sendMessage(message.activeGame(data['summonerName']));
+            return newGame;
+        } else {
+            console.log('Game start time mismatch. Minutes diff between uncreated DB game and Riot game: ', (Date.now() - data['gameStartTime'])/60_000);
+            return null;
+        }
     } else {
         if (currentGame.status == 'bettable') {
             const currentTime = new Date();
